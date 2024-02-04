@@ -6,7 +6,7 @@ function App() {
   return (
     <>
     <Router>
-      <div className='mx-6'>
+      <div className='mx-6 lg:mx-52'>
     <Carrier />
     
     <Routes>

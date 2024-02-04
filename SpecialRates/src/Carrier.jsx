@@ -7,6 +7,8 @@ const Carrier = () => {
     const [carriertype, setCarriertype] = useState('dry');
     const [togglesize, setTogglesize] = useState(false);
     const [toggletype, setToggletype] = useState(false);
+    const [textcolor, setTextColor] = useState('black');
+    const [textbg, setTextbg] = useState('white')
 
     const containerSize=[{
         id: '1',
@@ -29,18 +31,24 @@ const Carrier = () => {
         Id: '2',
         type: 'reefer'
       }];
+
+      const handlechangeText = (e) => {
+        setTextColor('#ffffff');
+        setTextbg('#000000');
+    }
  
   return (
     <div>
           <h1 className="text-4xl my-12">Special Rates</h1>
-          <div className='flex flex-row space-x-4'>
+          <div className='flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:space-x-40'>
+          <div className='flex flex-row space-x-2'>
           <div>
-            <button  onClick={()=>setTogglesize(!togglesize)} className='flex flex-row space-x-3 border border-secondary px-3 py-3 rounded-md'>
-                <h3>{carriersize}</h3> <img width="16" height="16" className='py-1' src="https://img.icons8.com/sf-regular-filled/48/737373/expand-arrow.png" alt="expand-arrow"/>
+            <button  onClick={()=>setTogglesize(!togglesize)} className='flex flex-row space-x-3 border border-secondary px-3 py-2 rounded-[4px]'>
+                <h3>{carriersize}</h3> <img width="16" height="16" className='py-1 pr-1' src="https://img.icons8.com/sf-regular-filled/48/737373/expand-arrow.png" alt="expand-arrow"/>
             </button>
             <ul className={`${!togglesize ? 'hidden' : 'flex flex-col'} text-sm  my-2 rounded-md shadow-lg py-3 px-2 space-y-5 text-secondary w-24`}>
                {containerSize.map((ft)=>(
-                <li key={ft.id} className={`${activesize===ft.size ? "bg-primary text-green" : "text-black bg-none"}  py-1 px-1`} onClick={()=>{setTogglesize(!togglesize);
+                <li key={ft.id} className={`${activesize===ft.size ? "bg-primary text-green rounded-sm" : "text-black bg-none"}  py-1 px-1`} onClick={()=>{setTogglesize(!togglesize);
                     setCarriersize(ft.size);
                 setActivesize(ft.size)
                 }}>{ft.size}</li>
@@ -49,20 +57,34 @@ const Carrier = () => {
           </div>
 
           <div>
-            <button  onClick={()=>setToggletype(!toggletype)} className='flex flex-row space-x-3 border border-secondary px-3 py-3 rounded-md'>
-                <h2>{carriertype}</h2> <img width="16" height="16" className='py-1' src="https://img.icons8.com/sf-regular-filled/48/737373/expand-arrow.png" alt="expand-arrow"/>
+            <button  onClick={()=>setToggletype(!toggletype)} className='flex flex-row space-x-3 border border-secondary px-3 py-2 rounded-[4px]'>
+                <h2>{carriertype}</h2> <img width="16" height="16" className='py-1 pr-1' src="https://img.icons8.com/sf-regular-filled/48/737373/expand-arrow.png" alt="expand-arrow"/>
             </button>
             <ul className={`${!toggletype ? 'hidden' : 'flex flex-col'} text-md  my-2 rounded-md shadow-lg py-3 px-2 space-y-5 text-secondary w-24`}>
                {containerType.map((link)=>(
-                <li key={link.Id} className={`${activetype===link.type ? "bg-primary text-green" : "text-black bg-none"}  py-1 px-1`} onClick={()=>{setToggletype(!toggletype);
+                <li key={link.Id} className={`${activetype===link.type ? "bg-primary text-green rounded-sm" : "text-black bg-none"}  py-1 px-1`} onClick={()=>{setToggletype(!toggletype);
                     setCarriertype(link.type);
                 setActivetype(link.type)
                 }}>{link.type}</li>
                ))}
             </ul>
           </div>
-
           </div>
+
+          <div className='flex flex-row space-x-2 justify-between lg:space-x-3 overflow-x-scroll'>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>COSCO</button>
+                <button  className='border border-secondary px-3 py-2 rounded-[4px]'>CMA&nbsp;CGM</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>MAERSK</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>PIL</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>ZIM</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>OOCL</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>MSC</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>ONE</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>ESL</button>
+                <button className='border border-secondary px-3 py-2 rounded-[4px]'>EVERGREEN</button>
+          </div>
+          </div>
+          <hr className='text-secondary w-full my-6' />
     </div>
   )
 }
