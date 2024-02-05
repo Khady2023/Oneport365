@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import UseFetch from './UseFetch';
 
 const Carrier = () => {
@@ -8,10 +8,10 @@ const Carrier = () => {
     const [carriersize, setCarriersize] = useState('20FT');
     const [carriertype, setCarriertype] = useState('dry');
     const [togglesize, setTogglesize] = useState(false);
-    const [toggletype, setToggletype] = useState(false);  
+    const [toggletype, setToggletype] = useState(false); 
 
-    
-     const {result} = UseFetch(`https://oneport365.free.beeceptor.com/live_rates?container_size=${carriersize}&container_type=${carriertype}`);
+    const{special_rate_id} = useParams(); 
+     const {result} = UseFetch(`https://oneport365.free.beeceptor.com/live_rates?container_size=${carriersize}&container_type=${carriertype}` + special_rate_id);
     
 
     const containerSize=[{
@@ -40,7 +40,7 @@ const Carrier = () => {
  
   return (
     <div>
-          <Link to=''><h1 className="text-4xl my-12">Special Rates</h1></Link> 
+          <Link to='/Carrier'><h1 className="text-4xl my-12">Special Rates</h1></Link> 
           <div className='flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:space-x-40'>
           
           <div className='flex flex-row space-x-2'>
@@ -73,18 +73,11 @@ const Carrier = () => {
           </div>
           </div>
 
-          <div className='flex flex-row space-x-2 justify-between lg:space-x-3 overflow-x-scroll'>
-                <Link to=""><button className='border border-secondary px-3 py-2 rounded-[4px]'>COSCO</button></Link>
-                <button  className='border border-secondary px-3 py-2 rounded-[4px]'>CMA&nbsp;CGM</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>MAERSK</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>PIL</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>ZIM</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>OOCL</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>MSC</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>ONE</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>ESL</button>
-                <button className='border border-secondary px-3 py-2 rounded-[4px]'>EVERGREEN</button>
+        {result && (
+          <div key={click.special_rate_id} className='flex flex-row space-x-2 justify-between lg:space-x-3 overflow-x-scroll'>
+            <button className='border border-secondary px-3 py-2 rounded-[4px]'>{click.carrier_name}</button>
           </div>
+        )}  
           </div>
          
           <hr className='text-secondary w-full my-8' />

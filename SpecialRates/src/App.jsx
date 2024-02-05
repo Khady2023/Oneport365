@@ -13,7 +13,6 @@ function App() {
     
     <Routes>
     <Route path='/CarrierDetails' element={<CarrierDetails/>} />
-    {/* <Route path='/Cosco' element={<Cosco/>} /> */}
     
     </Routes>
     </div>
