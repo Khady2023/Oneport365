@@ -1,5 +1,7 @@
-import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Carrier from './Carrier'
+import CarrierDetails from './CarrierDetails';
+import UseFetch from './UseFetch';
 
 function App() {
  
@@ -10,7 +12,9 @@ function App() {
     <Carrier />
     
     <Routes>
-
+    <Route path='/CarrierDetails' element={<CarrierDetails/>} />
+    {/* <Route path='/Cosco' element={<Cosco/>} /> */}
+    
     </Routes>
     </div>
     </Router>
