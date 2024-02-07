@@ -10,10 +10,10 @@ const Cosco = ({result}) => {
       <h2>{link.origin_port_code} - <span>{link.destination_port_code}</span></h2>
       </div>
 
-      <h1 className='py-3 text-xl'>{link.total_amount_usd}</h1>
-      <hr className='my-4' />
+      <h1 className='py-3 text-xl pb-5'>${link.total_amount_usd}</h1>
+      <hr className='py-4' />
 
-      <div className='flex flex-row justify-between text-sm'>
+      <div className='flex flex-row justify-between text-sm '>
           <div className='flex flex-col'>
               <p className='text-secondary'>Sailing Date</p>
               <p>{link.sailing_date}</p>
@@ -36,3 +36,4 @@ const Cosco = ({result}) => {
 }
 
 export default Cosco
+

@@ -1,18 +1,90 @@
-import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
-import UseFetch from './UseFetch';
+import React, { useState, useEffect } from 'react'
+import CarrierDetails from './CarrierDetails';
+
 
 const Carrier = () => {
+
     const [activesize, setActivesize] = useState('');
-    const [activetype, setActivetype] = useState('');
+    const [activetype, setActivetype] = useState(''); 
+    const [activecarrier, setActivecarrier] = useState('');
+    const [carrierNames, setCarrierNames] = useState(["Cosco,Moscow"]); 
     const [carriersize, setCarriersize] = useState('20FT');
     const [carriertype, setCarriertype] = useState('dry');
     const [togglesize, setTogglesize] = useState(false);
     const [toggletype, setToggletype] = useState(false); 
-
-    const{special_rate_id} = useParams(); 
-     const {result} = UseFetch(`https://oneport365.free.beeceptor.com/live_rates?container_size=${carriersize}&container_type=${carriertype}` + special_rate_id);
+    const [result, setResult] = useState([]);
+  
+      // useEffect(async ()=>{
+  
+      //     // fetch(`http://test-api.oneport365.com/api/live_rates/get_special_rates_no_auth?container_size=${carriersize}&container_type=${carriertype}`, { mode: 'no-cors' })
+  
+      //     fetch('./g.json')
+      //     .then((res)=>{
+      //       console.log(res.json())
+      //       return res.json();
+      //     })
+      //     .then((x)=>{
+      //       console.log("deji")
+      //       console.log(x.data.rates);
+      //       let carrierNames=new Set(x.data.rates.carrier_name);
+      //       console.log("got here");
+      //       console.log(carrierNames);
+      //     setResult(x.data.rates);
+      //     })
+      //     .catch((error) => {
+      //       console.error('Error fetching data:', error);
+      //     })
+          
+      //     });
     
+carrierNames.forEach(x=>{
+  console.log("carrier :",x);
+})
+      useEffect(() => {
+        async function fetchData() {
+          try {
+            const response = await fetch('./g.json');
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log("deji");
+            
+            console.log(data.data.rates);
+            setCarrierNames(Array.from(new Set(data.data.rates.map(item =>item.carrier_name ))));
+            console.log("got here");
+            console.log(carrierNames);
+            setResult(data.data.rates);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        }
+      
+        fetchData();
+      }, []);
+      
+
+    async function filterData(keyword){
+        try {
+          const response = await fetch('./g.json');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const result = await response.json();
+          console.log(result);
+          let output=[];
+          result.data.rates.forEach(x=>{
+            if(x.carrier_name==keyword){
+              output.push(x);
+            }
+          });
+          console.log(output);
+          setResult(output);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+
 
     const containerSize=[{
         id: '1',
@@ -21,10 +93,6 @@ const Carrier = () => {
       {
         id: '2',
         size: '40FT'
-      },
-      {
-        id: '3',
-        size: '40FT HC'
       }];
 
       const containerType=[{
@@ -40,7 +108,7 @@ const Carrier = () => {
  
   return (
     <div>
-          <Link to='/Carrier'><h1 className="text-4xl my-12">Special Rates</h1></Link> 
+         <h1 className="text-4xl my-12">Special Rates</h1>
           <div className='flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:space-x-40'>
           
           <div className='flex flex-row space-x-2'>
@@ -71,20 +139,24 @@ const Carrier = () => {
                ))}
             </ul>
           </div>
+          </div> 
+
+          <div className='flex my-6 overflow-x-scroll'>
+            {carrierNames.map((x)=>{return <button  className={`${activecarrier === x ? 'text-white bg-black px-2 py-2': 'mx-2 border px-2 py-2 rounded-lg'}`} onClick={() =>{ filterData(x);
+            setActivecarrier(x)
+            }}>{x}</button>})}
           </div>
 
-        {result && (
-          <div key={click.special_rate_id} className='flex flex-row space-x-2 justify-between lg:space-x-3 overflow-x-scroll'>
-            <button className='border border-secondary px-3 py-2 rounded-[4px]'>{click.carrier_name}</button>
           </div>
-        )}  
-          </div>
+          
          
           <hr className='text-secondary w-full my-8' />
 
+        {result && <CarrierDetails result={result} carrierNames={carrierNames}/>}
 
     </div>
   )
 }
 
 export default Carrier
+
