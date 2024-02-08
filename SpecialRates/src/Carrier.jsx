@@ -1,61 +1,33 @@
 import React, { useState, useEffect } from 'react'
 import CarrierDetails from './CarrierDetails';
 
-
 const Carrier = () => {
-
+    
     const [activesize, setActivesize] = useState('');
     const [activetype, setActivetype] = useState(''); 
     const [activecarrier, setActivecarrier] = useState('');
-    const [carrierNames, setCarrierNames] = useState(["Cosco,Moscow"]); 
+    const [carrierNames, setCarrierNames] = useState([]); 
     const [carriersize, setCarriersize] = useState('20FT');
     const [carriertype, setCarriertype] = useState('dry');
     const [togglesize, setTogglesize] = useState(false);
     const [toggletype, setToggletype] = useState(false); 
     const [result, setResult] = useState([]);
   
-      // useEffect(async ()=>{
-  
-      //     // fetch(`http://test-api.oneport365.com/api/live_rates/get_special_rates_no_auth?container_size=${carriersize}&container_type=${carriertype}`, { mode: 'no-cors' })
-  
-      //     fetch('./g.json')
-      //     .then((res)=>{
-      //       console.log(res.json())
-      //       return res.json();
-      //     })
-      //     .then((x)=>{
-      //       console.log("deji")
-      //       console.log(x.data.rates);
-      //       let carrierNames=new Set(x.data.rates.carrier_name);
-      //       console.log("got here");
-      //       console.log(carrierNames);
-      //     setResult(x.data.rates);
-      //     })
-      //     .catch((error) => {
-      //       console.error('Error fetching data:', error);
-      //     })
-          
-      //     });
-    
-carrierNames.forEach(x=>{
-  console.log("carrier :",x);
-})
       useEffect(() => {
         async function fetchData() {
           try {
-            const response = await fetch('./g.json');
+            // const response = await fetch('./g.json');
+
+            const response = await fetch(`https://test-api.oneport365.com/api/live_rates/get_special_rates_no_auth?container_size=${carriersize}&container_type=${carriertype}`, { mode: 'cors' });
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
-            const data = await response.json();
-            console.log("deji");
-            
-            console.log(data.data.rates);
-            setCarrierNames(Array.from(new Set(data.data.rates.map(item =>item.carrier_name ))));
-            console.log("got here");
+            const apiData = await response.json();
+            console.log(apiData.data.rates);
+            setCarrierNames(Array.from(new Set(apiData.data.rates.map(item =>item.carrier_name ))));
             console.log(carrierNames);
-            setResult(data.data.rates);
-          } catch (error) {
+            setResult(apiData.data.rates);
+          } catch(error) {
             console.error('Error fetching data:', error);
           }
         }
@@ -66,12 +38,16 @@ carrierNames.forEach(x=>{
 
     async function filterData(keyword){
         try {
-          const response = await fetch('./g.json');
+          // const response = await fetch('./g.json');
+
+          const response = await fetch(`https://test-api.oneport365.com/api/live_rates/get_special_rates_no_auth?container_size=${carriersize}&container_type=${carriertype}`, { mode: 'cors' });
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
+
           const result = await response.json();
           console.log(result);
+
           let output=[];
           result.data.rates.forEach(x=>{
             if(x.carrier_name==keyword){
@@ -84,7 +60,6 @@ carrierNames.forEach(x=>{
           console.error('Error fetching data:', error);
         }
       }
-
 
     const containerSize=[{
         id: '1',
@@ -104,8 +79,6 @@ carrierNames.forEach(x=>{
         type: 'reefer'
       }];
 
-   
- 
   return (
     <div>
          <h1 className="text-4xl my-12">Special Rates</h1>
@@ -119,6 +92,7 @@ carrierNames.forEach(x=>{
             <ul className={`${!togglesize ? 'hidden' : 'flex flex-col'} text-sm  my-2 rounded-md shadow-lg py-3 px-2 space-y-5 text-secondary w-24 z-10 absolute bg-white`}>
                {containerSize.map((ft)=>(
                 <li key={ft.id} className={`${activesize===ft.size ? "bg-primary text-green rounded-sm" : "text-black bg-none"}  py-1 px-1`} onClick={()=>{setTogglesize(!togglesize);
+                  console.log("changed the size");
                     setCarriersize(ft.size);
                 setActivesize(ft.size);
                 }}>{ft.size}</li>
@@ -133,6 +107,7 @@ carrierNames.forEach(x=>{
             <ul className={`${!toggletype ? 'hidden' : 'flex flex-col'} text-md  my-2 rounded-md shadow-lg py-3 px-2 space-y-5 text-secondary w-24 z-10 absolute bg-white`}>
                {containerType.map((link)=>(
                 <li key={link.Id} className={`${activetype===link.type ? "bg-primary text-green rounded-sm" : "text-black bg-none"}  py-1 px-1`} onClick={()=>{setToggletype(!toggletype);
+                  console.log("changed the type");
                     setCarriertype(link.type);
                 setActivetype(link.type);
                 }}>{link.type}</li>
@@ -141,8 +116,8 @@ carrierNames.forEach(x=>{
           </div>
           </div> 
 
-          <div className='flex my-6 overflow-x-scroll'>
-            {carrierNames.map((x)=>{return <button  className={`${activecarrier === x ? 'text-white bg-black px-2 py-2': 'mx-2 border px-2 py-2 rounded-lg'}`} onClick={() =>{ filterData(x);
+          <div className='float-right flex my-6 overflow-x-scroll'>
+            {carrierNames.map((x)=>{return <button key={x}  className={`${activecarrier === x ? 'text-white bg-gray-800 rounded-lg px-2 py-2': 'mx-2 border px-2 py-2 rounded-lg'}`} onClick={() =>{ filterData(x);
             setActivecarrier(x)
             }}>{x}</button>})}
           </div>
@@ -152,7 +127,7 @@ carrierNames.forEach(x=>{
          
           <hr className='text-secondary w-full my-8' />
 
-        {result && <CarrierDetails result={result} carrierNames={carrierNames}/>}
+        {result && <CarrierDetails result={result} />}
 
     </div>
   )
